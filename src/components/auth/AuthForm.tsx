@@ -1,10 +1,11 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { Check, User, Home } from 'lucide-react';
 
 type UserRole = 'buyer' | 'seller' | null;
 
@@ -20,6 +21,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
   const [selectedRole, setSelectedRole] = useState<UserRole>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +69,7 @@ const AuthForm = ({ mode }: AuthFormProps) => {
       
       // In a real app, redirect to dashboard after auth
       setTimeout(() => {
-        window.location.href = '/';
+        navigate('/');
       }, 1500);
     } catch (error) {
       console.error('Auth error:', error);
@@ -102,19 +104,63 @@ const AuthForm = ({ mode }: AuthFormProps) => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === 'register' && (
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
-                </label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
+              <>
+                <div className="mb-6">
+                  <p className="text-sm font-medium text-gray-700 mb-3">I want to:</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div
+                      className={`border rounded-md p-4 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all ${
+                        selectedRole === 'buyer'
+                          ? 'border-acremart-500 bg-acremart-50 ring-2 ring-acremart-200'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                      onClick={() => setSelectedRole('buyer')}
+                    >
+                      <div className={`rounded-full p-3 ${selectedRole === 'buyer' ? 'bg-acremart-100 text-acremart-600' : 'bg-gray-100'}`}>
+                        <User className="h-6 w-6" />
+                      </div>
+                      <span className="font-medium text-center">Buy Properties</span>
+                      {selectedRole === 'buyer' && (
+                        <div className="absolute top-2 right-2 rounded-full bg-acremart-500 p-1">
+                          <Check className="h-3 w-3 text-white" />
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      className={`border rounded-md p-4 flex flex-col items-center justify-center gap-3 cursor-pointer relative transition-all ${
+                        selectedRole === 'seller'
+                          ? 'border-acremart-500 bg-acremart-50 ring-2 ring-acremart-200'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                      onClick={() => setSelectedRole('seller')}
+                    >
+                      <div className={`rounded-full p-3 ${selectedRole === 'seller' ? 'bg-acremart-100 text-acremart-600' : 'bg-gray-100'}`}>
+                        <Home className="h-6 w-6" />
+                      </div>
+                      <span className="font-medium text-center">Sell Properties</span>
+                      {selectedRole === 'seller' && (
+                        <div className="absolute top-2 right-2 rounded-full bg-acremart-500 p-1">
+                          <Check className="h-3 w-3 text-white" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Full Name
+                  </label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+              </>
             )}
             
             <div>
@@ -147,46 +193,20 @@ const AuthForm = ({ mode }: AuthFormProps) => {
             </div>
             
             {mode === 'register' && (
-              <>
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-                    Confirm Password
-                  </label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    placeholder="••••••••"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    minLength={8}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    I want to:
-                  </label>
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button
-                      type="button"
-                      variant={selectedRole === 'buyer' ? 'default' : 'outline'}
-                      className={selectedRole === 'buyer' ? 'bg-acremart-400 hover:bg-acremart-500' : ''}
-                      onClick={() => setSelectedRole('buyer')}
-                    >
-                      Buy Properties
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={selectedRole === 'seller' ? 'default' : 'outline'}
-                      className={selectedRole === 'seller' ? 'bg-acremart-400 hover:bg-acremart-500' : ''}
-                      onClick={() => setSelectedRole('seller')}
-                    >
-                      Sell Properties
-                    </Button>
-                  </div>
-                </div>
-              </>
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                  Confirm Password
+                </label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  minLength={8}
+                />
+              </div>
             )}
             
             <Button 

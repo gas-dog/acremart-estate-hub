@@ -1,11 +1,16 @@
 
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Search, User, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
 
   return (
     <nav className="bg-white shadow-sm py-4">
@@ -20,16 +25,16 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="text-gray-600 hover:text-acremart-500 font-medium">
+          <Link to="/" className={`font-medium ${isActive('/') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'}`}>
             Home
           </Link>
-          <Link to="/properties" className="text-gray-600 hover:text-acremart-500 font-medium">
+          <Link to="/properties" className={`font-medium ${isActive('/properties') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'}`}>
             Properties
           </Link>
-          <Link to="/about" className="text-gray-600 hover:text-acremart-500 font-medium">
+          <Link to="/about" className={`font-medium ${isActive('/about') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'}`}>
             About
           </Link>
-          <Link to="/contact" className="text-gray-600 hover:text-acremart-500 font-medium">
+          <Link to="/contact" className={`font-medium ${isActive('/contact') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'}`}>
             Contact
           </Link>
         </div>
@@ -62,28 +67,28 @@ const Navbar = () => {
           <div className="flex flex-col space-y-3">
             <Link 
               to="/" 
-              className="text-gray-600 py-2 hover:text-acremart-500 font-medium"
+              className={`py-2 ${isActive('/') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'} font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link 
               to="/properties" 
-              className="text-gray-600 py-2 hover:text-acremart-500 font-medium"
+              className={`py-2 ${isActive('/properties') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'} font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Properties
             </Link>
             <Link 
               to="/about" 
-              className="text-gray-600 py-2 hover:text-acremart-500 font-medium"
+              className={`py-2 ${isActive('/about') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'} font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
             <Link 
               to="/contact" 
-              className="text-gray-600 py-2 hover:text-acremart-500 font-medium"
+              className={`py-2 ${isActive('/contact') ? 'text-acremart-500' : 'text-gray-600 hover:text-acremart-500'} font-medium`}
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
